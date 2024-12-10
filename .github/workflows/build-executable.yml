@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # Allow manual triggering
+  workflow_dispatch:
 
 jobs:
   build:
@@ -28,7 +28,8 @@ jobs:
         pyinstaller --onefile --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." rename_files.py
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rename_files_executable
         path: dist/rename_files.exe
+        retention-days: 7
