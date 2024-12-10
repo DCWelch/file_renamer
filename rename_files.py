@@ -78,10 +78,14 @@ def get_date_taken(file_path):
                             date_taken = naive_time.astimezone(eastern)
                         return date_taken, False
         elif mime_type and mime_type.startswith('video'):
+            # Use ffprobe to extract creation time from videos
             result = subprocess.run(
                 ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", 
                  "format_tags=creation_time", "-of", "default=noprint_wrappers=1:nokey=1", file_path],
-                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0  # Suppress window on Windows
+            )
             creation_time = result.stdout.decode().strip()
             if creation_time:
                 naive_time = datetime.datetime.fromisoformat(creation_time.replace('Z', ''))
@@ -115,10 +119,14 @@ def rename_files_by_date(folder_path):
     write_log(f"Timezone being used: {eastern.zone}")
 
     write_log("Step 2: Finding files in folder...")
-    update_progress_bar(2)
-    files = [os.path.normpath(os.path.join(folder_path, f)) for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+    excluded_extensions = [".txt"]
+    files = [
+        os.path.normpath(os.path.join(folder_path, f)) 
+        for f in os.listdir(folder_path) 
+        if os.path.isfile(os.path.join(folder_path, f)) and not any(f.lower().endswith(ext) for ext in excluded_extensions)
+    ]
     total_files = len(files)
-    write_log(f"Found {total_files} files in folder: {folder_path}")
+    write_log(f"Found {total_files} files in folder: {folder_path} (excluding .txt files)")
 
     write_log("Step 3: Extracting dates from files...")
     update_progress_bar(3)
@@ -203,6 +211,9 @@ def create_gui():
 
     root = Tk()
     root.title("File Renaming Tool")
+
+    # Set the taskbar and app window icon to the provided icon
+    root.iconbitmap("file_renamer_icon.ico")
 
     # Calculate 3/4 screen size
     screen_width = root.winfo_screenwidth()
