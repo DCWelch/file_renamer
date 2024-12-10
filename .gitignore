@@ -1,0 +1,15 @@
+# PyInstaller build files
+build/
+dist/
+*.spec
+
+# Log files
+*.log
+
+# Byte-compiled Python files
+__pycache__/
+*.py[cod]
+
+# System-specific files
+.DS_Store
+Thumbs.db
