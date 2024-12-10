@@ -213,7 +213,11 @@ def create_gui():
     root.title("File Renaming Tool")
 
     # Set the taskbar and app window icon to the provided icon
-    root.iconbitmap("file_renamer_icon.ico")
+    if hasattr(sys, '_MEIPASS'):
+        icon_path = os.path.join(sys._MEIPASS, "file_renamer_icon.ico")
+    else:
+        icon_path = "file_renamer_icon.ico"
+    root.iconbitmap(icon_path)
 
     # Calculate 3/4 screen size
     screen_width = root.winfo_screenwidth()
