@@ -1,2 +1,2 @@
-# media_file_renamer
-A tool to rename photos and videos to a consistent, helpful format
+# file_renamer
+A tool to rename photo and video files to a consistent, helpful format
