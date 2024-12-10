@@ -25,11 +25,11 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --onefile --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." rename_files.py
+        pyinstaller --onefile --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --hidden-import=PIL --hidden-import=pytz rename_files.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: rename_files_executable
-        path: dist/rename_files.exe
+        path: dist/
         retention-days: 7
