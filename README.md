@@ -30,6 +30,7 @@ This tool was created for a very specific use case, so it is intentionally stati
   1. A live GUI log window
   2. A log file in the selected directory and a dedicated `logs` directory
 - Intuitive GUI built with `Tkinter`
+- Built for Windows
 
 ## Alternatives
 
