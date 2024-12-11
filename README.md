@@ -32,8 +32,8 @@ This tool was created for a very specific use case, so it is intentionally stati
 ## Alternatives
 
 Many similar tasks may find themselves better solved with one of these tools:
-1. [Bulk Rename Utility](https://www.bulkrenameutility.co.uk/)
-2. [Microsoft PowerRename](https://learn.microsoft.com/en-us/windows/powertoys/powerrename)
+- [Bulk Rename Utility](https://www.bulkrenameutility.co.uk/)
+- [Microsoft PowerRename](https://learn.microsoft.com/en-us/windows/powertoys/powerrename)
 
 ## Download the latest version of the tool
 Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) or the repo's [Releases](https://github.com/DCWelch/file_renamer/releases) tab to download the executable and necessary supporting files, which are packaged together in a zip file called `rename_files_executable.zip`.
