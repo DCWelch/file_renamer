@@ -4,16 +4,18 @@ This File Renamer is a tool designed to rename a collection of vacation photos f
    ```bash
    <year>_<month>_<day>_<hour>_<id>
    ```
-Example:
+Examples:
    ```bash
-   20230228_092122(0).png --> 2023_02_28_09_001.png
-   Snapchat-286861347.jpg --> 2023_03_02_17_002.jpg
-   Screenshot_20240620_124449_Chrome.jpg --> 2024_06_20_12_003.jpg
-   0 Travel Day (3aaa).heic --> 2024_06_20_17_004.heic
-   0 Travel Day (4).mp4 --> 2024_06_20_17_005.mp4
+   20230228_092122(0).png  -->  2023_02_28_09_001.png
+   Snapchat-286861347.jpg  -->  2023_03_02_17_002.jpg
+   Screenshot_20240620_124449_Chrome.jpg  -->  2024_06_20_12_003.jpg
+   0 Travel Day (3aaa).heic  -->  2024_06_20_17_004.heic
+   0 Travel Day (4).mp4  -->  2024_06_20_17_005.mp4
    ```
 
 This tool was created for a very specific use case, so it is intentionally static and simple. Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for more high-level information.
+
+![example_file_renamer_gui](https://github.com/user-attachments/assets/fcdd43af-fcf1-448f-b83b-66fc174a3122)
 
 ## Features
 - Renames files using date taken-equivelant metadata (e.g., `DateTimeOriginal` for images)
@@ -28,6 +30,7 @@ This tool was created for a very specific use case, so it is intentionally stati
   1. A live GUI log window
   2. A log file in the selected directory and a dedicated `logs` directory
 - Intuitive GUI built with `Tkinter`
+- Built for Windows
 
 ## Alternatives
 
@@ -134,4 +137,4 @@ This project is licensed under the [MIT License](LICENSE)
 - The Python community: For providing the libraries and tools that power this application
 
 ## Contact
-For questions, feedback, or support, feel free to contact me at [dcwelch545@gmail.com](mailto:dcwelch545@gmail.com).
+For questions, feedback, or support, feel free to contact me at [dcwelch545@gmail.com](mailto:dcwelch545@gmail.com)
