@@ -30,7 +30,8 @@ Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for high-level inform
 - Intuitive GUI built with `Tkinter`
 
 ## Download the latest version of the tool
-Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) or the Releases tab to download the executable and necessary supporting files
+Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) or the repo's [Releases](https://github.com/DCWelch/file_renamer/releases) tab to download the executable and necessary supporting files, which are packaged together in a zip file called `rename_files_executable.zip`.
+
 ## Build the project from source
 ### Prerequisites
 - Python 3.12 or later
