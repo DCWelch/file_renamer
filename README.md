@@ -92,11 +92,11 @@ file_renamer/
 │   └── rename_files/
 │       ├── rename_files.exe  # Executable file to launch the file_renamer GUI
 │       └── _internal/  # Contains necessary dependencies for the executable
+│           ├── logs/  # Stores log files (created at runtime)
+│           │   └──
 │           └──
-├── build/  # Contains build artifacts (after running PyInstaller)
-│   └──
-└── logs/  # Stores log files (created at runtime)
-    └──
+└── build/  # Contains build artifacts (after running PyInstaller)
+    └── 
 ```
 
 ## Contributing
