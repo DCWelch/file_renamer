@@ -200,7 +200,6 @@ def rename_files_by_date(folder_path):
         # Store file data
         file_dates.append((file, date_taken, is_fallback, fallback_creation_time, fallback_modification_time))
 
-        # Logging logic
         if is_fallback:
             write_log(f"No Date Taken Found. Fallback Date Modified for {file}:  {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})" if date_taken else f"No Date Taken Found. Fallback failed for {file}. Defaulting to unknown date.")
             write_log(f"  Date Taken: N/A")
