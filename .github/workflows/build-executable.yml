@@ -25,7 +25,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --hidden-import pillow_heif --hidden-import exif --hidden-import pytz.zoneinfo --hidden-import xml.etree.ElementTree rename_files.py
+        pyinstaller --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --hidden-import pillow_heif --hidden-import pillow_heif.heiffile --hidden-import exif --hidden-import pytz.zoneinfo --hidden-import xml.etree.ElementTree rename_files.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
