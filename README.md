@@ -136,4 +136,4 @@ This project is licensed under the [MIT License](LICENSE)
 - The Python community: For providing the libraries and tools that power this application
 
 ## Contact
-For questions, feedback, or support, feel free to contact me at [dcwelch545@gmail.com](mailto:dcwelch545@gmail.com).
+For questions, feedback, or support, feel free to contact me at [dcwelch545@gmail.com](mailto:dcwelch545@gmail.com)
