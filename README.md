@@ -28,7 +28,10 @@ Example:
 - Intuitive GUI built with `Tkinter`
 
 ## Installation
-### Prerequisites
+### Download the latest version of the tool
+Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) or the Releases tab to download the executable and necessary supporting files
+### Build the project from source
+#### Prerequisites
 - Python 3.12 or later
 - The following Python dependencies (included in `requirements.txt`):
   ```plaintext
@@ -39,7 +42,7 @@ Example:
 - FFmpeg for `ffprobe` support (ensure it’s in your system PATH)
 - pyinstaller (only if a new executable is desired)
 
-### Steps
+#### Steps
 1. Clone the repository:
    ```bash
    git clone https://github.com/DCWelch/file_renamer.git
@@ -54,7 +57,7 @@ Example:
    python rename_files.py
    ```
 
-### Build an Executable
+#### Build an Executable
 To create a standalone executable:
 1. Install `pyinstaller`:
    ```bash
