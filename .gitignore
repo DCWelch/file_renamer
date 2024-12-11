@@ -5,6 +5,7 @@ dist/
 
 # Log files
 *.log
+logs/
 
 # Byte-compiled Python files
 __pycache__/
@@ -13,3 +14,6 @@ __pycache__/
 # System-specific files
 .DS_Store
 Thumbs.db
+
+# Virtual Environment
+venv/

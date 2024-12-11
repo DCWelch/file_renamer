@@ -152,7 +152,12 @@ def rename_files_by_date(folder_path):
 
     # Generate log filenames
     script_directory = os.path.dirname(os.path.abspath(__file__))
-    main_log_file = generate_log_filename("file_rename_log", script_directory)
+    logs_directory = os.path.join(script_directory, "logs")
+
+    # Ensure the logs directory exists
+    os.makedirs(logs_directory, exist_ok=True)
+
+    main_log_file = generate_log_filename("file_rename_log", logs_directory)
     secondary_log_file = generate_log_filename("file_rename_log", folder_path)
 
     # Initialize the log files
