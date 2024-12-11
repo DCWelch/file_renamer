@@ -16,12 +16,12 @@ Example:
 ## Features
 - Renames files using date taken-equivelant metadata (e.g., `DateTimeOriginal` for images)
 - Handles missing metadata gracefully with fallback timestamps (typically using last modified date)
-- - Designates these files in a separate, reviewable category prefixed with "ZZZ_"
+  - Designates these files in a separate, reviewable category prefixed with "ZZZ_"
 - Support for a majority of common image and videos file formats, including...
- - .png/.jpg/.jpeg image files via `pillow`
- - .heic image files via `pillow-heif`
- - .mp4/.mov video files via `ffprobe`
- - no other file formats are currently tested, but most others should be processed with a fallback date at a minimum
+  - .png/.jpg/.jpeg image files via `pillow`
+  - .heic image files via `pillow-heif`
+  - .mp4/.mov video files via `ffprobe`
+  - no other file formats are currently tested, but most others should be processed with a fallback date at a minimum
 - Logs operations which maintain name mapping to...
   1. A live GUI log window
   2. A log file in the selected directory and a dedicated `logs` directory
