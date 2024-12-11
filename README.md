@@ -68,12 +68,6 @@ To create a standalone executable:
    ```
 3. The executable will be located in the `dist/` folder
 
-4. (optional) Create a new executable:
-   ```bash
-   pip install pyinstaller
-   pyinstaller --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --exclude-module numpy --exclude-module mkl --exclude-module tcl --exclude-module tbb --exclude-module pywin32 --exclude-module psutil rename_files.py
-   ```
-
 ## Usage
 1. Launch the application
 2. Use the `Pick Folder` button to select a target directory
