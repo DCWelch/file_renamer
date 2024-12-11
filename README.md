@@ -1,16 +1,18 @@
 # [File Renamer](https://dcwelch.github.io/fr)
 
+![example_file_renamer_gui](https://github.com/user-attachments/assets/fcdd43af-fcf1-448f-b83b-66fc174a3122)
+
 This File Renamer is a tool designed to rename a collection of vacation photos from various sources in a very simple, consistent, and specific way. The new naming format is primarily based on the date taken, when available, and can be represented as follows:
    ```bash
    <year>_<month>_<day>_<hour>_<id>
    ```
-Example:
+Examples:
    ```bash
-   20230228_092122(0).png --> 2023_02_28_09_001.png
-   Snapchat-286861347.jpg --> 2023_03_02_17_002.jpg
-   Screenshot_20240620_124449_Chrome.jpg --> 2024_06_20_12_003.jpg
-   0 Travel Day (3aaa).heic --> 2024_06_20_17_004.heic
-   0 Travel Day (4).mp4 --> 2024_06_20_17_005.mp4
+   20230228_092122(0).png  -->  2023_02_28_09_001.png
+   Snapchat-286861347.jpg  -->  2023_03_02_17_002.jpg
+   Screenshot_20240620_124449_Chrome.jpg  -->  2024_06_20_12_003.jpg
+   0 Travel Day (3aaa).heic  -->  2024_06_20_17_004.heic
+   0 Travel Day (4).mp4  -->  2024_06_20_17_005.mp4
    ```
 
 This tool was created for a very specific use case, so it is intentionally static and simple. Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for more high-level information.
