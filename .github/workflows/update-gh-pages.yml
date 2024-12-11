@@ -72,7 +72,7 @@ jobs:
                     <li>Provides fallback options for missing metadata.</li>
                 </ul>
                 <h2>Need Help?</h2>
-                <p>For more information or to report bugs, visit the <a href="https://github.com/dcwelch/file-renamer/issues">GitHub Issues page</a>.</p>
+                <p>For more information or to report bugs, visit the <a href="https://github.com/dcwelch/file_renamer/issues">GitHub Issues page</a>.</p>
             </main>
         </body>
         </html>' > index.html
