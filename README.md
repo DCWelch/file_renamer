@@ -83,14 +83,18 @@ file_renamer/
 ├── rename_files.py  # Main script
 ├── requirements.txt  # Dependencies
 ├── file_renamer_icon.ico  # App icon
-├── .gitignore  # Specifies intentionally untracked files to ignore
 ├── .github/  # Outlines GitHub Actions workflow for the build
+│   └──
 ├── logs/  # Stores log files (created at runtime)
+│   └──
 ├── dist/  # Contains built executable (after running PyInstaller)
 │   └── rename_files/
 │       ├── rename_files.exe  # Executable file to launch the file_renamer GUI
 │       └── _internal/  # Contains necessary dependencies for the executable
+│           └──
 ├── build/  # Contains build artifacts (after running PyInstaller)
+│   └──
+├── .gitignore  # Specifies intentionally untracked files to ignore
 └── README.md  # Documentation
 ```
 
