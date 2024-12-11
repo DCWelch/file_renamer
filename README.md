@@ -60,28 +60,35 @@ To create a standalone executable:
 
 ## Directory Structure
 ```plaintext
-<repo-root>/
+file_renamer/
 ├── rename_files.py  # Main script
-├── requirements.txt # Dependencies
-├── file_renamer_icon.ico  # Application icon
-├── logs/  # Contains log files (created at runtime)
+├── requirements.txt  # Dependencies
+├── file_renamer_icon.ico  # App icon
+├── .gitignore  # Specifies intentionally untracked files to ignore
+├── .github/  # Outlines GitHub Actions workflow for the build
+├── logs/  # Stores log files (created at runtime)
 ├── dist/  # Contains built executable (after running PyInstaller)
+│   └── rename_files/
+│       ├── rename_files.exe  # Executable file to launch the file_renamer GUI
+│       └── _internal/  # Contains necessary dependencies for the executable
+├── build/  # Contains build artifacts (after running PyInstaller)
 └── README.md  # Documentation
 ```
 
 ## Contributing
-Contributions are welcome! Please:
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Submit a pull request with a detailed description of changes.
+Contributions are welcome! Please...
+1. Fork the repository
+2. Create a new branch for your feature or bug fix
+3. Submit a pull request with a description of your proposed changes
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
-- `pillow-heif` for HEIC/HEIF support.
-- `pytz` for timezone handling.
-- FFmpeg for video metadata processing.
+- `pillow-heif` for HEIC/HEIF support
+- `pytz` for timezone handling
+- FFmpeg for video metadata processing
+- [Folder icons](https://www.flaticon.com/free-icons/folder) created by [Freepik](https://www.flaticon.com/authors/freepik) - [Flaticon](https://www.flaticon.com).
 
 ## Contact
-For questions or feedback, please reach out to [your-email@example.com].
+For questions or feedback, please reach out to [dcwelch545@gmail.com]
