@@ -21,7 +21,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install pyinstaller pillow pytz
+        pip install pyinstaller pillow-heif exif pytz
 
     - name: Build executable
       run: |
