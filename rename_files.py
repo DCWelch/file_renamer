@@ -6,6 +6,9 @@ from PIL.ExifTags import TAGS
 import mimetypes
 import subprocess
 from pytz import timezone
+import sys
+from pillow_heif import register_heif_opener
+import pyexiv2
 
 # Define Eastern Time (ET)
 eastern = timezone('US/Eastern')
@@ -24,6 +27,9 @@ progress_steps = [
 
 # Log file name
 LOG_FILE_NAME = "file_rename_log.txt"
+
+# Register HEIC support
+register_heif_opener()
 
 # Function to write logs to both the GUI and the log file
 def write_log(message):
@@ -58,49 +64,88 @@ def generate_log_filename(base_name, directory):
     return os.path.join(directory, filename)
 
 # Function to get the date taken
+from pillow_heif import register_heif_opener
+from PIL import Image
+
+# Register HEIC support
+register_heif_opener()
+
+# Updated get_date_taken function
 def get_date_taken(file_path):
     fallback_creation_time = datetime.datetime.fromtimestamp(os.path.getctime(file_path))
     fallback_modification_time = datetime.datetime.fromtimestamp(os.path.getmtime(file_path))
+    date_taken = None  # Default to None
+    is_fallback = True  # Assume fallback unless proven otherwise
 
     try:
         mime_type, _ = mimetypes.guess_type(file_path)
         if mime_type and mime_type.startswith('image'):
             image = Image.open(file_path)
-            exif_data = image._getexif()
-            if exif_data:
-                for tag, value in exif_data.items():
-                    decoded = TAGS.get(tag, tag)
-                    if decoded == "DateTimeOriginal":
-                        naive_time = datetime.datetime.strptime(value, '%Y:%m:%d %H:%M:%S')
-                        if naive_time.tzinfo is None:
-                            date_taken = eastern.localize(naive_time)
-                        else:
-                            date_taken = naive_time.astimezone(eastern)
-                        return date_taken, False
+            
+            # Handle HEIC/HEIF formats
+            if mime_type in ("image/heic", "image/heif"):
+                try:
+                    from pillow_heif import register_heif_opener
+                    register_heif_opener()
+                    
+                    # Check for EXIF metadata
+                    metadata = image.info.get("Exif")
+                    if metadata:
+                        from exif import Image as ExifImage
+                        exif_image = ExifImage(metadata)
+                        if exif_image.has_exif and exif_image.datetime_original:
+                            naive_time = datetime.datetime.strptime(exif_image.datetime_original, '%Y:%m:%d %H:%M:%S')
+                            date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
+                            is_fallback = False
+                    
+                    # Check for XMP metadata if EXIF fails
+                    if date_taken is None:
+                        xmp_data = image.info.get("xmp")
+                        if xmp_data:
+                            import xml.etree.ElementTree as ET
+                            root = ET.fromstring(xmp_data)
+                            create_date = root.find(".//{http://ns.adobe.com/xap/1.0/}CreateDate")
+                            if create_date is not None:
+                                naive_time = datetime.datetime.strptime(create_date.text, '%Y-%m-%dT%H:%M:%S')
+                                date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
+                                is_fallback = False
+                except Exception as e:
+                    write_log(f"Error processing HEIC/HEIF metadata for {file_path}: {e}")
+            else:
+                # Handle standard image formats using Pillow
+                exif_data = image._getexif()
+                if exif_data:
+                    for tag, value in exif_data.items():
+                        decoded = TAGS.get(tag, tag)
+                        if decoded == "DateTimeOriginal":
+                            naive_time = datetime.datetime.strptime(value, '%Y:%m:%d %H:%M:%S')
+                            date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
+                            is_fallback = False
+                            break
         elif mime_type and mime_type.startswith('video'):
-            # Use ffprobe to extract creation time from videos
+            # Handle video formats using ffprobe
             result = subprocess.run(
-                ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", 
+                ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
                  "format_tags=creation_time", "-of", "default=noprint_wrappers=1:nokey=1", file_path],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0  # Suppress window on Windows
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
             )
             creation_time = result.stdout.decode().strip()
             if creation_time:
                 naive_time = datetime.datetime.fromisoformat(creation_time.replace('Z', ''))
-                if naive_time.tzinfo is None:
-                    date_taken = eastern.localize(naive_time)
-                else:
-                    date_taken = naive_time.astimezone(eastern)
-                return date_taken, False
+                date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
+                is_fallback = False
     except Exception as e:
-        return None, True  # Return None with fallback indicator
+        write_log(f"Error processing file {file_path}: {e}")
 
-    # Fallback to file last modified date
-    return eastern.localize(fallback_modification_time), True
+    # If no date_taken was found, fallback to modification time
+    if date_taken is None:
+        date_taken = eastern.localize(fallback_modification_time)
 
-# Function to rename files
+    return date_taken, is_fallback
+
+# Updated rename_files_by_date function with refined logging
 def rename_files_by_date(folder_path):
     global main_log_file, secondary_log_file
 
@@ -136,10 +181,7 @@ def rename_files_by_date(folder_path):
 
     for file in files:
         date_info = get_date_taken(file)
-        if isinstance(date_info, tuple):
-            date_taken, is_fallback = date_info
-        else:
-            date_taken, is_fallback = date_info, False
+        date_taken, is_fallback = date_info if isinstance(date_info, tuple) else (None, True)
 
         # Collect dates for logging
         fallback_creation_time = datetime.datetime.fromtimestamp(os.path.getctime(file))
@@ -152,18 +194,20 @@ def rename_files_by_date(folder_path):
         # Store file data
         file_dates.append((file, date_taken, is_fallback, fallback_creation_time, fallback_modification_time))
 
-        # Log details in real-time
+        # Logging logic
         if is_fallback:
-            write_log(f"No Date Taken Found. Fallback Date Modified for {file}: {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})")
+            write_log(f"No Date Taken Found. Fallback Date Modified for {file}: {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})" if date_taken else f"No Date Taken Found. Fallback failed for {file}. Defaulting to unknown date.")
+            write_log(f"  Date Taken: N/A")
         else:
             write_log(f"Date Taken for {file}: {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})")
-        write_log(f"  Date Taken: {date_taken if not is_fallback else 'N/A'}")
+            write_log(f"  Date Taken: {date_taken}")
+
         write_log(f"  Creation: {fallback_creation_time}")
         write_log(f"  Last Modified: {fallback_modification_time}")
 
     write_log("Step 4: Sorting files by date...")
     update_progress_bar(4)
-    file_dates.sort(key=lambda x: x[1])  # Sort by date_taken
+    file_dates.sort(key=lambda x: x[1] or fallback_modification_time)  # Sort by date_taken or fallback
     write_log("Files sorted by date.")
 
     write_log("Step 5: Renaming files...")
