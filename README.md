@@ -54,7 +54,7 @@ Example:
    python rename_files.py
    ```
 
-## Build an Executable
+### Build an Executable
 To create a standalone executable:
 1. Install `pyinstaller`:
    ```bash
