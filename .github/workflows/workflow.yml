@@ -30,17 +30,19 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
-    # Step 4: Build the executable
+        # Step 4: Build the executable
     - name: Build executable
       run: |
-        pyinstaller --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data="file_renamer_icon.ico:." --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --exclude-module=numpy --exclude-module=mkl --exclude-module=tcl --exclude-module=tbb --exclude-module=pywin32 --exclude-module=psutil rename_files.py
+        pyinstaller --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data="file_renamer_icon.ico:." --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --exclude-module=numpy --exclude-module=mkl --exclude-module=tcl --exclude-module=tbb --exclude-module=pywin32 --exclude-module=psutil --distpath=dist --workpath=build rename_files.py
 
     # Step 5: Upload as artifact
-    - name: Upload executable artifact
-      uses: actions/upload-artifact@v3
+    - name: Upload executable
+      uses: actions/upload-artifact@v4
       with:
         name: rename_files_executable
-        path: dist/rename_files/rename_files.exe
+        path: |
+          dist/rename_files/*
+          build/rename_files/*
 
   update-gh-pages:
     runs-on: ubuntu-latest
