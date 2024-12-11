@@ -8,7 +8,6 @@ import subprocess
 from pytz import timezone
 import sys
 from pillow_heif import register_heif_opener
-import pyexiv2
 
 # Define Eastern Time (ET)
 eastern = timezone('US/Eastern')
@@ -81,15 +80,14 @@ def get_date_taken(file_path):
         mime_type, _ = mimetypes.guess_type(file_path)
         if mime_type and mime_type.startswith('image'):
             image = Image.open(file_path)
-            
-            # Handle HEIC/HEIF formats
+
+            # Handle HEIC/HEIF formats using pillow-heif
             if mime_type in ("image/heic", "image/heif"):
                 try:
-                    from pillow_heif import register_heif_opener
                     register_heif_opener()
-                    
-                    # Check for EXIF metadata
                     metadata = image.info.get("Exif")
+
+                    # Extract EXIF metadata if present
                     if metadata:
                         from exif import Image as ExifImage
                         exif_image = ExifImage(metadata)
@@ -97,8 +95,8 @@ def get_date_taken(file_path):
                             naive_time = datetime.datetime.strptime(exif_image.datetime_original, '%Y:%m:%d %H:%M:%S')
                             date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                             is_fallback = False
-                    
-                    # Check for XMP metadata if EXIF fails
+
+                    # Extract XMP metadata as a fallback
                     if date_taken is None:
                         xmp_data = image.info.get("xmp")
                         if xmp_data:
@@ -109,10 +107,11 @@ def get_date_taken(file_path):
                                 naive_time = datetime.datetime.strptime(create_date.text, '%Y-%m-%dT%H:%M:%S')
                                 date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                                 is_fallback = False
+
                 except Exception as e:
                     write_log(f"Error processing HEIC/HEIF metadata for {file_path}: {e}")
             else:
-                # Handle standard image formats using Pillow
+                # Standard image formats using Pillow
                 exif_data = image._getexif()
                 if exif_data:
                     for tag, value in exif_data.items():
@@ -122,8 +121,9 @@ def get_date_taken(file_path):
                             date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                             is_fallback = False
                             break
+
         elif mime_type and mime_type.startswith('video'):
-            # Handle video formats using ffprobe
+            # Extract metadata from video formats using ffprobe
             result = subprocess.run(
                 ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
                  "format_tags=creation_time", "-of", "default=noprint_wrappers=1:nokey=1", file_path],
@@ -136,6 +136,7 @@ def get_date_taken(file_path):
                 naive_time = datetime.datetime.fromisoformat(creation_time.replace('Z', ''))
                 date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                 is_fallback = False
+
     except Exception as e:
         write_log(f"Error processing file {file_path}: {e}")
 
