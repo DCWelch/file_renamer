@@ -44,14 +44,19 @@ jobs:
   update-gh-pages:
     runs-on: ubuntu-latest
     needs: build-executable
-    if: github.event_name == 'push'
-
     steps:
     # Step 1: Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Update webpage content (no executable update)
+    # Step 2: Fetch latest release URL
+    - name: Fetch latest release URL
+      id: fetch-latest-release
+      run: |
+        LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/dcwelch/file_renamer/releases/latest | jq -r '.assets[] | select(.name | endswith(".zip")).browser_download_url')
+        echo "LATEST_RELEASE_URL=${LATEST_RELEASE_URL}" >> $GITHUB_ENV
+
+    # Step 3: Update webpage content
     - name: Update webpage
       run: |
         mkdir gh-pages
@@ -99,87 +104,8 @@ jobs:
             <main>
                 <p>Welcome to the official page for <strong>File Renamer</strong>. Simplify file renaming with powerful features like metadata-based sorting and intuitive GUI support.</p>
                 <h2>Download</h2>
-                <p>The latest release is available below:</p>
-                <a class="download-btn" href="rename_files.exe">Download File Renamer</a>
-                <h2>Features</h2>
-                <ul>
-                    <li>Renames files based on metadata like date taken.</li>
-                    <li>Supports multiple file formats, including images and videos.</li>
-                    <li>Provides fallback options for missing metadata.</li>
-                </ul>
-                <h2>Need Help?</h2>
-                <p>For more information or to report bugs, visit the <a href="https://github.com/dcwelch/file_renamer/issues">GitHub Issues page</a>.</p>
-            </main>
-        </body>
-        </html>' > gh-pages/index.html
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: gh-pages
-
-  update-gh-pages-release:
-    runs-on: ubuntu-latest
-    needs: build-executable
-    if: github.event_name == 'release'
-
-    steps:
-    # Step 1: Checkout the repository
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    # Step 2: Update webpage content with release executable
-    - name: Update webpage with release executable
-      run: |
-        mkdir gh-pages
-        cp dist/rename_files.exe gh-pages/
-        echo '<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>File Renamer</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    margin: 0;
-                    padding: 0;
-                    text-align: center;
-                    background-color: #f9f9f9;
-                    color: #333;
-                }
-                header {
-                    background-color: #4CAF50;
-                    color: white;
-                    padding: 1rem;
-                }
-                main {
-                    padding: 2rem;
-                }
-                a.download-btn {
-                    display: inline-block;
-                    margin-top: 20px;
-                    padding: 10px 20px;
-                    color: white;
-                    background-color: #007BFF;
-                    text-decoration: none;
-                    border-radius: 5px;
-                }
-                a.download-btn:hover {
-                    background-color: #0056b3;
-                }
-            </style>
-        </head>
-        <body>
-            <header>
-                <h1>File Renamer</h1>
-            </header>
-            <main>
-                <p>Welcome to the official page for <strong>File Renamer</strong>. Simplify file renaming with powerful features like metadata-based sorting and intuitive GUI support.</p>
-                <h2>Download</h2>
                 <p>Click the button below to download the latest version:</p>
-                <a class="download-btn" href="rename_files.exe">Download File Renamer</a>
+                <a class="download-btn" href="'$LATEST_RELEASE_URL'">Download File Renamer</a>
                 <h2>Features</h2>
                 <ul>
                     <li>Renames files based on metadata like date taken.</li>
@@ -192,6 +118,7 @@ jobs:
         </body>
         </html>' > gh-pages/index.html
 
+    # Step 4: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
