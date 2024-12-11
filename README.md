@@ -21,7 +21,7 @@ Example:
   - .png/.jpg/.jpeg image files via `pillow`
   - .heic image files via `pillow-heif`
   - .mp4/.mov video files via `ffprobe`
-  - no other file formats are currently tested, but most others should be processed with a fallback date at a minimum
+  - no other file formats are currently tested, but most others should process normally using the fallback date at a minimum
 - Logs operations which maintain name mapping to...
   1. A live GUI log window
   2. A log file in the selected directory and a dedicated `logs` directory
