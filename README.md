@@ -13,7 +13,7 @@ Example:
    0 Travel Day (4).mp4 --> 2024_06_20_17_005.mp4
    ```
 
-Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for high-level information regarding use of the tool.
+This tool was created for a very specific use case, so it is intentionally static and simple. Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for more high-level information.
 
 ## Features
 - Renames files using date taken-equivelant metadata (e.g., `DateTimeOriginal` for images)
@@ -28,6 +28,12 @@ Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for high-level inform
   1. A live GUI log window
   2. A log file in the selected directory and a dedicated `logs` directory
 - Intuitive GUI built with `Tkinter`
+
+## Alternatives
+
+Many similar tasks may find themselves better solved with one of these tools:
+1. [Bulk Rename Utility](https://www.bulkrenameutility.co.uk/)
+2. [Microsoft PowerRename](https://learn.microsoft.com/en-us/windows/powertoys/powerrename)
 
 ## Download the latest version of the tool
 Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) or the repo's [Releases](https://github.com/DCWelch/file_renamer/releases) tab to download the executable and necessary supporting files, which are packaged together in a zip file called `rename_files_executable.zip`.
@@ -98,11 +104,22 @@ file_renamer/
     └── 
 ```
 
-## Contributing
-Contributions are welcome! Please...
+## Contributing and Feedback
+
+Contributions and feedback are always welcome! Here's how you can get involved:
+
+### Reporting Issues or Requesting Features
+If you encounter a bug or have ideas for new features, please use the [GitHub Issues](https://github.com/DCWelch/file_renamer/issues) page to...
+- **Report Bugs**: Provide a clear description, steps to reproduce, and any relevant logs or screenshots
+- **Request Features**: Share your suggestions for new features or improvements
+
+### Submitting Code Contributions
+If you'd like to contribute code changes...
 1. Fork the repository
 2. Create a new branch for your feature or bug fix
-3. Submit a pull request with a description of your proposed changes
+3. Submit a pull request with a detailed description of your proposed changes
+
+Any feedback, suggestions, or contributions are greatly appreciated!
 
 ## License
 This project is licensed under the [MIT License](LICENSE)
@@ -117,4 +134,4 @@ This project is licensed under the [MIT License](LICENSE)
 - The Python community: For providing the libraries and tools that power this application
 
 ## Contact
-For questions or feedback, please reach out to [dcwelch545@gmail.com]
+For questions, feedback, or support, feel free to contact me at [dcwelch545@gmail.com](mailto:dcwelch545@gmail.com).
