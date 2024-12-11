@@ -1,12 +1,11 @@
 # File Renaming Tool
 
 This File Renamer is a tool designed to rename a collection of vacation photos from various sources in a very simple, consistent, and specific way. The new naming format is primarily based on the date taken, when available, and can be represented as follows:
-
    ```bash
    <year>_<month>_<day>_<hour>_<id>
    ```
+Example:
    ```bash
-   ex.
    20230228_092122(0).png --> 2023_02_28_09_001.png
    Snapchat-286861347.jpg --> 2023_03_02_17_002.jpg
    Screenshot_20240620_124449_Chrome.jpg --> 2024_06_20_12_003.jpg
