@@ -108,12 +108,12 @@ Contributions are welcome! Please...
 This project is licensed under the [MIT License](LICENSE)
 
 ## Acknowledgments
-- **[Pillow](https://pillow.readthedocs.io/)**: For image processing and EXIF metadata handling
+- **[`Pillow`](https://pillow.readthedocs.io/)**: For image processing and EXIF metadata handling
 - **[`pillow-heif`](https://github.com/carsales/pillow-heif)**: For HEIC/HEIF image support
-- **[pytz](https://pytz.sourceforge.net/)**: For timezone handling
-- **[FFmpeg](https://ffmpeg.org/)**: For video metadata extraction via `ffprobe`
-- **[Tkinter](https://docs.python.org/3/library/tkinter.html)**: For the graphical user interface
-- **[Flaticon](https://www.flaticon.com/)**: [Folder icons](https://www.flaticon.com/free-icons/folder) created by [Freepik](https://www.flaticon.com/authors/freepik)
+- **[`pytz`](https://pytz.sourceforge.net/)**: For timezone handling
+- **[`FFmpeg`](https://ffmpeg.org/)**: For video metadata extraction via `ffprobe`
+- **[`Tkinter`](https://docs.python.org/3/library/tkinter.html)**: For the graphical user interface
+- **[`Flaticon`](https://www.flaticon.com/)**: [Folder icons](https://www.flaticon.com/free-icons/folder) created by [Freepik](https://www.flaticon.com/authors/freepik)
 - The Python community: For providing the libraries and tools that power this application
 
 ## Contact
