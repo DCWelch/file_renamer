@@ -109,7 +109,7 @@ def get_date_taken(file_path):
                                 is_fallback = False
 
                 except Exception as e:
-                    write_log(f"Error processing HEIC/HEIF metadata for {file_path}: {e}")
+                    write_log(f"Error processing HEIC/HEIF metadata for {file_path}:  {e}")
             else:
                 # Standard image formats using Pillow
                 exif_data = image._getexif()
@@ -138,7 +138,7 @@ def get_date_taken(file_path):
                 is_fallback = False
 
     except Exception as e:
-        write_log(f"Error processing file {file_path}: {e}")
+        write_log(f"Error processing file {file_path}:  {e}")
 
     # If no date_taken was found, fallback to modification time
     if date_taken is None:
@@ -165,11 +165,11 @@ def rename_files_by_date(folder_path):
     write_log("=" * 40)
     write_log("")
 
-    write_log("Step 1: Launching rename script...")
+    write_log("Step 1:  Launching rename script...")
     update_progress_bar(1)
-    write_log(f"Timezone being used: {eastern.zone}")
+    write_log(f"Timezone being used:  {eastern.zone}")
 
-    write_log("Step 2: Finding files in folder...")
+    write_log("Step 2:  Finding files in folder...")
     excluded_extensions = [".txt"]
     files = [
         os.path.normpath(os.path.join(folder_path, f)) 
@@ -177,9 +177,9 @@ def rename_files_by_date(folder_path):
         if os.path.isfile(os.path.join(folder_path, f)) and not any(f.lower().endswith(ext) for ext in excluded_extensions)
     ]
     total_files = len(files)
-    write_log(f"Found {total_files} files in folder: {folder_path} (excluding .txt files)")
+    write_log(f"Found {total_files} files in folder:  {folder_path} (excluding .txt files)")
 
-    write_log("Step 3: Extracting dates from files...")
+    write_log("Step 3:  Extracting dates from files...")
     update_progress_bar(3)
     padding_size = len(str(total_files))
     fallback_counter = 0
@@ -202,21 +202,21 @@ def rename_files_by_date(folder_path):
 
         # Logging logic
         if is_fallback:
-            write_log(f"No Date Taken Found. Fallback Date Modified for {file}: {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})" if date_taken else f"No Date Taken Found. Fallback failed for {file}. Defaulting to unknown date.")
+            write_log(f"No Date Taken Found. Fallback Date Modified for {file}:  {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})" if date_taken else f"No Date Taken Found. Fallback failed for {file}. Defaulting to unknown date.")
             write_log(f"  Date Taken: N/A")
         else:
-            write_log(f"Date Taken for {file}: {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})")
-            write_log(f"  Date Taken: {date_taken}")
+            write_log(f"Date Taken for {file}:  {date_taken} ({date_taken.strftime('%Y_%m_%d_%H')})")
+            write_log(f"  Date Taken:  {date_taken}")
 
-        write_log(f"  Creation: {fallback_creation_time}")
-        write_log(f"  Last Modified: {fallback_modification_time}")
+        write_log(f"  Creation:  {fallback_creation_time}")
+        write_log(f"  Last Modified:  {fallback_modification_time}")
 
-    write_log("Step 4: Sorting files by date...")
+    write_log("Step 4:  Sorting files by date...")
     update_progress_bar(4)
     file_dates.sort(key=lambda x: x[1] or fallback_modification_time)  # Sort by date_taken or fallback
     write_log("Files sorted by date.")
 
-    write_log("Step 5: Renaming files...")
+    write_log("Step 5:  Renaming files...")
     update_progress_bar(5)
     for idx, (file_path, date, is_fallback, _, _) in enumerate(file_dates, start=1):
         if date is None:
@@ -231,15 +231,15 @@ def rename_files_by_date(folder_path):
         new_path = os.path.normpath(os.path.join(folder_path, new_name))
         try:
             os.rename(file_path, new_path)
-            write_log(f"Renamed: {file_path} -> {new_name}")
+            write_log(f"Renamed:  {file_path}  -->  {new_name}")
         except PermissionError as e:
-            write_log(f"PermissionError: {e} on file {file_path}")
+            write_log(f"PermissionError:  {e} on file {file_path}")
 
     write_log("Renaming complete.")
-    write_log("Step 6: Output Statistics...")
+    write_log("Step 6:  Output Statistics...")
     update_progress_bar(6)
-    write_log(f"Total files processed: {total_files}")
-    write_log(f"...Of which, the number of files using a fallback timestamp: {fallback_counter}")
+    write_log(f"Total files processed:  {total_files}")
+    write_log(f"...Of which, the number of files using a fallback timestamp:  {fallback_counter}")
     write_log("File Renaming Complete.")
     update_progress_bar(7)
 
