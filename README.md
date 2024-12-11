@@ -1,4 +1,4 @@
-# File Renamer
+# [File Renamer](https://dcwelch.github.io/fr)
 
 This File Renamer is a tool designed to rename a collection of vacation photos from various sources in a very simple, consistent, and specific way. The new naming format is primarily based on the date taken, when available, and can be represented as follows:
    ```bash
@@ -12,6 +12,8 @@ Example:
    0 Travel Day (3aaa).heic --> 2024_06_20_17_004.heic
    0 Travel Day (4).mp4 --> 2024_06_20_17_005.mp4
    ```
+
+Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for high-level information regarding use of the tool.
 
 ## Features
 - Renames files using date taken-equivelant metadata (e.g., `DateTimeOriginal` for images)
