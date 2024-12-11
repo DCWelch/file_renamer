@@ -72,7 +72,7 @@ To create a standalone executable:
 3. The executable will be located in the `dist/` folder
 
 ## Usage
-1. Launch the application
+1. Launch the application (via rename_files.exe)
 2. Use the `Pick Folder` button to select a target directory
 3. Click `Start Renaming` to rename all files in the selected directory
 
