@@ -13,28 +13,24 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    # Step 1: Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: 3.12
 
-    # Step 3: Install dependencies
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
         pip install pyinstaller
 
-    # Step 4: Build the Windows executable
     - name: Build executable
       run: |
-        pyinstaller --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --exclude-module numpy --exclude-module mkl --exclude-module tcl --exclude-module tbb --exclude-module pywin32 --exclude-module psutil rename_files.py
-
-    # Step 5: Upload as artifact
+        piexif_path=$(python -c "import piexif; import os; print(os.path.dirname(piexif.__file__))")
+        pyinstaller --clean --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --add-data "$piexif_path;piexif" --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --hidden-import=piexif --collect-all pillow_heif --collect-all piexif --exclude-module numpy --exclude-module mkl --exclude-module tcl --exclude-module tbb --exclude-module pywin32 --exclude-module psutil --log-level=DEBUG rename_files.py
+        
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -45,18 +41,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-executable
     steps:
-    # Step 1: Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Fetch latest release URL
     - name: Fetch latest release URL
       id: fetch-latest-release
       run: |
         LATEST_RELEASE_URL=$(curl -s https://api.github.com/repos/dcwelch/file_renamer/releases/latest | jq -r '.assets[] | select(.name | endswith(".zip")).browser_download_url')
         echo "LATEST_RELEASE_URL=${LATEST_RELEASE_URL}" >> $GITHUB_ENV
 
-    # Step 3: Update webpage content
     - name: Update webpage
       run: |
         mkdir gh-pages
@@ -118,7 +111,6 @@ jobs:
         </body>
         </html>' > gh-pages/index.html
 
-    # Step 4: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:

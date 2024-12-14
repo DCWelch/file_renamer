@@ -62,13 +62,6 @@ def generate_log_filename(base_name, directory):
         counter += 1
     return os.path.join(directory, filename)
 
-# Function to get the date taken
-from pillow_heif import register_heif_opener
-from PIL import Image
-
-# Register HEIC support
-register_heif_opener()
-
 # Updated get_date_taken function
 def get_date_taken(file_path):
     fallback_creation_time = datetime.datetime.fromtimestamp(os.path.getctime(file_path))
@@ -82,34 +75,86 @@ def get_date_taken(file_path):
             image = Image.open(file_path)
 
             # Handle HEIC/HEIF formats using pillow-heif
+# --------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+
             if mime_type in ("image/heic", "image/heif"):
                 try:
-                    register_heif_opener()
-                    metadata = image.info.get("Exif")
+                    try:
+                        import piexif
+                        write_log("[DEBUG] Successfully imported piexif in the bundled executable.")
+                    except ImportError as e:
+                        write_log(f"[ERROR] Failed to import piexif: {e}")
+    
+                    metadata = image.info.get("exif")  # Note: Changed to lowercase 'exif' key
+                    xmp_data = image.info.get("xmp")
 
-                    # Extract EXIF metadata if present
+                    # Debugging fetched metadata (show first 500 characters for clarity)
+                    metadata_preview = str(image.info)[:500]
+                    write_log(f"[DEBUG] Metadata preview for {file_path}: {metadata_preview}")
+
+                    # Attempt to parse EXIF metadata using piexif
                     if metadata:
-                        from exif import Image as ExifImage
-                        exif_image = ExifImage(metadata)
-                        if exif_image.has_exif and exif_image.datetime_original:
-                            naive_time = datetime.datetime.strptime(exif_image.datetime_original, '%Y:%m:%d %H:%M:%S')
-                            date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
-                            is_fallback = False
+                        write_log(f"[DEBUG] Found EXIF metadata for {file_path}. Attempting to parse with piexif...")
+                        try:
+                            exif_dict = piexif.load(metadata)
+                            write_log(f"[DEBUG] Parsed EXIF tags: {exif_dict.keys()}")
 
-                    # Extract XMP metadata as a fallback
-                    if date_taken is None:
-                        xmp_data = image.info.get("xmp")
-                        if xmp_data:
+                            # Extract DateTimeOriginal
+                            datetime_original = exif_dict.get("Exif", {}).get(piexif.ExifIFD.DateTimeOriginal)
+                            if datetime_original:
+                                datetime_original = datetime_original.decode("utf-8")  # Convert bytes to string
+                                write_log(f"[DEBUG] Found DateTimeOriginal: {datetime_original}")
+                                naive_time = datetime.datetime.strptime(datetime_original, '%Y:%m:%d %H:%M:%S')
+                                date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
+                                is_fallback = False
+                            else:
+                                write_log(f"[WARNING] No DateTimeOriginal found in EXIF metadata.")
+
+                            # Fallback to DateTimeDigitized
+                            if date_taken is None:
+                                datetime_digitized = exif_dict.get("Exif", {}).get(piexif.ExifIFD.DateTimeDigitized)
+                                if datetime_digitized:
+                                    datetime_digitized = datetime_digitized.decode("utf-8")
+                                    write_log(f"[DEBUG] Found DateTimeDigitized: {datetime_digitized}")
+                                    naive_time = datetime.datetime.strptime(datetime_digitized, '%Y:%m:%d %H:%M:%S')
+                                    date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
+                                    is_fallback = False
+                                else:
+                                    write_log(f"[WARNING] No DateTimeDigitized found in EXIF metadata.")
+                        except Exception as exif_error:
+                            write_log(f"[ERROR] Failed to parse EXIF metadata using piexif for {file_path}: {exif_error}")
+
+                    # Extract XMP metadata as a further fallback
+                    if date_taken is None and xmp_data:
+                        write_log(f"[DEBUG] Found XMP metadata for {file_path}. Attempting to parse...")
+                        try:
                             import xml.etree.ElementTree as ET
                             root = ET.fromstring(xmp_data)
                             create_date = root.find(".//{http://ns.adobe.com/xap/1.0/}CreateDate")
                             if create_date is not None:
+                                write_log(f"[DEBUG] Found CreateDate in XMP metadata: {create_date.text}")
                                 naive_time = datetime.datetime.strptime(create_date.text, '%Y-%m-%dT%H:%M:%S')
                                 date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                                 is_fallback = False
+                            else:
+                                write_log(f"[WARNING] No CreateDate found in XMP metadata for {file_path}.")
+                        except Exception as xmp_error:
+                            write_log(f"[ERROR] Failed to parse XMP metadata for {file_path}: {xmp_error}")
+
+                    # Final debugging message
+                    if date_taken:
+                        write_log(f"[INFO] Successfully determined date_taken for {file_path}: {date_taken}")
+                    else:
+                        write_log(f"[ERROR] Unable to determine date_taken for {file_path}. All methods failed.")
 
                 except Exception as e:
-                    write_log(f"Error processing HEIC/HEIF metadata for {file_path}:  {e}")
+                    write_log(f"[ERROR] Processing HEIC/HEIF metadata failed for {file_path}: {e}")
+
+# --------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------
             else:
                 # Standard image formats using Pillow
                 exif_data = image._getexif()
@@ -117,6 +162,11 @@ def get_date_taken(file_path):
                     for tag, value in exif_data.items():
                         decoded = TAGS.get(tag, tag)
                         if decoded == "DateTimeOriginal":
+                            naive_time = datetime.datetime.strptime(value, '%Y:%m:%d %H:%M:%S')
+                            date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
+                            is_fallback = False
+                            break
+                        elif decoded == "DateTimeDigitized":
                             naive_time = datetime.datetime.strptime(value, '%Y:%m:%d %H:%M:%S')
                             date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                             is_fallback = False
@@ -244,7 +294,8 @@ def rename_files_by_date(folder_path):
 
 # GUI Implementation
 def create_gui():
-    global log_widget, progress_bar, progress_bar_labels  # Make log_widget accessible to other functions
+
+    global log_widget, progress_bar, progress_bar_labels
 
     def pick_folder():
         folder = filedialog.askdirectory()
