@@ -28,9 +28,10 @@ jobs:
 
     - name: Build executable
       run: |
-        piexif_path=$(python -c "import piexif; import os; print(os.path.dirname(piexif.__file__))")
+        $piexif_path = python -c "import piexif; import os; print(os.path.dirname(piexif.__file__))"
         pyinstaller --clean --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --add-data "$piexif_path;piexif" --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --hidden-import=piexif --collect-all pillow_heif --collect-all piexif --exclude-module numpy --exclude-module mkl --exclude-module tcl --exclude-module tbb --exclude-module pywin32 --exclude-module psutil --log-level=DEBUG rename_files.py
-        
+      shell: pwsh
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
