@@ -49,6 +49,7 @@ Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) or the repo's [Releas
   pillow
   pillow-heif
   pytz
+  piexif
   ```
 - FFmpeg for `ffprobe` support (ensure it’s in your system PATH)
 - pyinstaller (only if a new executable is desired)
@@ -74,9 +75,10 @@ To create a standalone executable:
    ```bash
    pip install pyinstaller
    ```
-2. Use the following command to generate the executable:
+2. Use the following commands to generate the executable:
    ```bash
-   pyinstaller --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --exclude-module numpy --exclude-module mkl --exclude-module tcl --exclude-module tbb --exclude-module pywin32 --exclude-module psutil rename_files.py
+   $piexif_path = python -c "import piexif; import os; print(os.path.dirname(piexif.__file__))"
+   pyinstaller --clean --noconfirm --noconsole --icon=file_renamer_icon.ico --add-data "file_renamer_icon.ico;." --add-data "$piexif_path;piexif" --hidden-import=pillow_heif --hidden-import=pytz.zoneinfo --hidden-import=piexif --collect-all pillow_heif --collect-all piexif --exclude-module numpy --exclude-module mkl --exclude-module tcl --exclude-module tbb --exclude-module pywin32 --exclude-module psutil --log-level=DEBUG rename_files.py
    ```
 3. The executable will be located in the `dist/` folder
 
