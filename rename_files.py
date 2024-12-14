@@ -9,10 +9,8 @@ from pytz import timezone
 import sys
 from pillow_heif import register_heif_opener
 
-# Define Eastern Time (ET)
 eastern = timezone('US/Eastern')
 
-# Progress bar steps
 progress_steps = [
     "Waiting...",
     "Launching...",
@@ -24,18 +22,14 @@ progress_steps = [
     "Complete..."
 ]
 
-# Log file name
 LOG_FILE_NAME = "file_rename_log.txt"
 
-# Register HEIC support
 register_heif_opener()
 
-# Function to write logs to both the GUI and the log file
 def write_log(message):
     log_widget.insert(END, message + "\n")
-    log_widget.see(END)  # Auto-scroll
+    log_widget.see(END)
     log_widget.update()
-    # Write to both log files
     with open(main_log_file, "a") as log_file:
         log_file.write(message + "\n")
     with open(secondary_log_file, "a") as log_file:
@@ -62,101 +56,64 @@ def generate_log_filename(base_name, directory):
         counter += 1
     return os.path.join(directory, filename)
 
-# Updated get_date_taken function
 def get_date_taken(file_path):
     fallback_creation_time = datetime.datetime.fromtimestamp(os.path.getctime(file_path))
     fallback_modification_time = datetime.datetime.fromtimestamp(os.path.getmtime(file_path))
-    date_taken = None  # Default to None
-    is_fallback = True  # Assume fallback unless proven otherwise
+    date_taken = None
+    is_fallback = True
 
     try:
         mime_type, _ = mimetypes.guess_type(file_path)
         if mime_type and mime_type.startswith('image'):
             image = Image.open(file_path)
 
-            # Handle HEIC/HEIF formats using pillow-heif
-# --------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------
-
             if mime_type in ("image/heic", "image/heif"):
                 try:
                     try:
                         import piexif
-                        write_log("[DEBUG] Successfully imported piexif in the bundled executable.")
                     except ImportError as e:
                         write_log(f"[ERROR] Failed to import piexif: {e}")
     
-                    metadata = image.info.get("exif")  # Note: Changed to lowercase 'exif' key
+                    metadata = image.info.get("exif")
                     xmp_data = image.info.get("xmp")
 
-                    # Debugging fetched metadata (show first 500 characters for clarity)
-                    metadata_preview = str(image.info)[:500]
-                    write_log(f"[DEBUG] Metadata preview for {file_path}: {metadata_preview}")
-
-                    # Attempt to parse EXIF metadata using piexif
                     if metadata:
-                        write_log(f"[DEBUG] Found EXIF metadata for {file_path}. Attempting to parse with piexif...")
                         try:
                             exif_dict = piexif.load(metadata)
-                            write_log(f"[DEBUG] Parsed EXIF tags: {exif_dict.keys()}")
-
-                            # Extract DateTimeOriginal
+                            
                             datetime_original = exif_dict.get("Exif", {}).get(piexif.ExifIFD.DateTimeOriginal)
                             if datetime_original:
                                 datetime_original = datetime_original.decode("utf-8")  # Convert bytes to string
-                                write_log(f"[DEBUG] Found DateTimeOriginal: {datetime_original}")
                                 naive_time = datetime.datetime.strptime(datetime_original, '%Y:%m:%d %H:%M:%S')
                                 date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                                 is_fallback = False
-                            else:
-                                write_log(f"[WARNING] No DateTimeOriginal found in EXIF metadata.")
 
-                            # Fallback to DateTimeDigitized
                             if date_taken is None:
                                 datetime_digitized = exif_dict.get("Exif", {}).get(piexif.ExifIFD.DateTimeDigitized)
                                 if datetime_digitized:
                                     datetime_digitized = datetime_digitized.decode("utf-8")
-                                    write_log(f"[DEBUG] Found DateTimeDigitized: {datetime_digitized}")
                                     naive_time = datetime.datetime.strptime(datetime_digitized, '%Y:%m:%d %H:%M:%S')
                                     date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                                     is_fallback = False
-                                else:
-                                    write_log(f"[WARNING] No DateTimeDigitized found in EXIF metadata.")
                         except Exception as exif_error:
                             write_log(f"[ERROR] Failed to parse EXIF metadata using piexif for {file_path}: {exif_error}")
 
-                    # Extract XMP metadata as a further fallback
                     if date_taken is None and xmp_data:
-                        write_log(f"[DEBUG] Found XMP metadata for {file_path}. Attempting to parse...")
                         try:
                             import xml.etree.ElementTree as ET
                             root = ET.fromstring(xmp_data)
                             create_date = root.find(".//{http://ns.adobe.com/xap/1.0/}CreateDate")
                             if create_date is not None:
-                                write_log(f"[DEBUG] Found CreateDate in XMP metadata: {create_date.text}")
                                 naive_time = datetime.datetime.strptime(create_date.text, '%Y-%m-%dT%H:%M:%S')
                                 date_taken = eastern.localize(naive_time) if naive_time.tzinfo is None else naive_time.astimezone(eastern)
                                 is_fallback = False
-                            else:
-                                write_log(f"[WARNING] No CreateDate found in XMP metadata for {file_path}.")
                         except Exception as xmp_error:
                             write_log(f"[ERROR] Failed to parse XMP metadata for {file_path}: {xmp_error}")
-
-                    # Final debugging message
-                    if date_taken:
-                        write_log(f"[INFO] Successfully determined date_taken for {file_path}: {date_taken}")
-                    else:
-                        write_log(f"[ERROR] Unable to determine date_taken for {file_path}. All methods failed.")
 
                 except Exception as e:
                     write_log(f"[ERROR] Processing HEIC/HEIF metadata failed for {file_path}: {e}")
 
-# --------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------
             else:
-                # Standard image formats using Pillow
                 exif_data = image._getexif()
                 if exif_data:
                     for tag, value in exif_data.items():
@@ -173,7 +130,6 @@ def get_date_taken(file_path):
                             break
 
         elif mime_type and mime_type.startswith('video'):
-            # Extract metadata from video formats using ffprobe
             result = subprocess.run(
                 ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
                  "format_tags=creation_time", "-of", "default=noprint_wrappers=1:nokey=1", file_path],
@@ -190,27 +146,22 @@ def get_date_taken(file_path):
     except Exception as e:
         write_log(f"Error processing file {file_path}:  {e}")
 
-    # If no date_taken was found, fallback to modification time
     if date_taken is None:
         date_taken = eastern.localize(fallback_modification_time)
 
     return date_taken, is_fallback
 
-# Updated rename_files_by_date function with refined logging
 def rename_files_by_date(folder_path):
     global main_log_file, secondary_log_file
 
-    # Generate log filenames
     script_directory = os.path.dirname(os.path.abspath(__file__))
     logs_directory = os.path.join(script_directory, "logs")
 
-    # Ensure the logs directory exists
     os.makedirs(logs_directory, exist_ok=True)
 
     main_log_file = generate_log_filename("file_rename_log", logs_directory)
     secondary_log_file = generate_log_filename("file_rename_log", folder_path)
 
-    # Initialize the log files
     write_log("File Rename Log")
     write_log("=" * 40)
     write_log("")
@@ -239,15 +190,12 @@ def rename_files_by_date(folder_path):
         date_info = get_date_taken(file)
         date_taken, is_fallback = date_info if isinstance(date_info, tuple) else (None, True)
 
-        # Collect dates for logging
         fallback_creation_time = datetime.datetime.fromtimestamp(os.path.getctime(file))
         fallback_modification_time = datetime.datetime.fromtimestamp(os.path.getmtime(file))
 
-        # Increment fallback counter if applicable
         if is_fallback:
             fallback_counter += 1
 
-        # Store file data
         file_dates.append((file, date_taken, is_fallback, fallback_creation_time, fallback_modification_time))
 
         if is_fallback:
@@ -292,7 +240,6 @@ def rename_files_by_date(folder_path):
     write_log("File Renaming Complete.")
     update_progress_bar(7)
 
-# GUI Implementation
 def create_gui():
 
     global log_widget, progress_bar, progress_bar_labels
@@ -312,29 +259,24 @@ def create_gui():
     root = Tk()
     root.title("File Renaming Tool")
 
-    # Set the taskbar and app window icon to the provided icon
     if hasattr(sys, '_MEIPASS'):
         icon_path = os.path.join(sys._MEIPASS, "file_renamer_icon.ico")
     else:
         icon_path = "file_renamer_icon.ico"
     root.iconbitmap(icon_path)
 
-    # Calculate 3/4 screen size
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     window_width = int(screen_width * 0.75)
     window_height = int(screen_height * 0.75)
 
-    # Center the window
     x_position = (screen_width - window_width) // 2
     y_position = (screen_height - window_height) // 2
     root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
 
-    # Main frame
     main_frame = Frame(root)
     main_frame.pack(fill=BOTH, expand=True)
 
-    # Progress bar
     progress_bar = Frame(main_frame)
     progress_bar.pack(fill=BOTH, pady=5)
     progress_bar_labels = []
@@ -352,7 +294,6 @@ def create_gui():
     rename_button = Button(main_frame, text="Start Renaming", state="disabled", command=start_renaming)
     rename_button.pack(pady=5)
 
-    # Log frame with scrollbar
     log_frame = Frame(main_frame)
     log_frame.pack(fill=BOTH, expand=True, pady=10)
 
@@ -363,12 +304,10 @@ def create_gui():
     scrollbar.pack(side=RIGHT, fill=Y)
     log_widget.config(yscrollcommand=scrollbar.set)
 
-    # Quit button at the bottom
     quit_button = Button(root, text="Quit", command=root.quit)
     quit_button.pack(side=BOTTOM, pady=10)
 
     root.mainloop()
 
-# Launch the GUI
 if __name__ == "__main__":
     create_gui()
