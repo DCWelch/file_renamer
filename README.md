@@ -13,7 +13,7 @@ Examples:
    0 Travel Day (4).mp4  -->  2024_06_20_17_005.mp4
    ```
 
-This tool was created for a very specific use case, so it is intentionally static and simple. Visit [dcwelch.github.io/fr](https://dcwelch.github.io/fr) for more high-level information.
+This tool was created for a very specific use case, so it is intentionally static and simple. Visit [dcwelch.github.io/file_renamer](https://dcwelch.github.io/file_renamer) for more high-level information.
 
 ![example_file_renamer_gui](https://github.com/user-attachments/assets/fcdd43af-fcf1-448f-b83b-66fc174a3122)
 
