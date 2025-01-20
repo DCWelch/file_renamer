@@ -1,6 +1,6 @@
 # [File Renamer](https://dcwelch.github.io/fr)
 
-This File Renamer is a tool designed to rename a collection of vacation photos from various sources in a very simple, consistent, and specific way. The new naming format is primarily based on the date taken, when available, and can be represented as follows:
+This File Renamer is a tool designed for Windows to rename a collection of vacation photos from various sources in a very simple, consistent, and specific way. The new naming format is primarily based on the date taken, when available, and can be represented as follows:
    ```bash
    <year>_<month>_<day>_<hour>_<id>
    ```
