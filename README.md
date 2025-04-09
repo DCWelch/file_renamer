@@ -13,7 +13,7 @@ Examples:
    0 Travel Day (4).mp4  -->  2024_06_20_17_005.mp4
    ```
 
-This tool was created for a very specific use case (to help organize photos from various common sources), so it is intentionally static and simple. For more powerful and complicated tool, see some of the alternatives listed below. Visit [dcwelch.github.io/file_renamer](https://dcwelch.github.io/file_renamer) for more high-level information on this tool.
+This tool was created for a very specific use case (to help organize photos from various common sources at the press of a button), so it is intentionally static and simple. For more complicated and powerful tools, see some of the alternatives listed below. Visit [dcwelch.github.io/file_renamer](https://dcwelch.github.io/file_renamer) for more high-level information on this file renamer.
 
 ![example_file_renamer_gui](https://github.com/user-attachments/assets/fcdd43af-fcf1-448f-b83b-66fc174a3122)
 
