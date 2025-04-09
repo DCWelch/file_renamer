@@ -90,22 +90,22 @@ To create a standalone executable:
 ## Directory Structure
 ```plaintext
 file_renamer/
-├── rename_files.py  # Main script
-├── requirements.txt  # Dependencies
-├── file_renamer_icon.ico  # App icon
-├── .gitignore  # Specifies intentionally untracked files to ignore
-├── LICENSE  # License
-├── README.md  # Documentation
-├── .github/  # Outlines GitHub Actions workflow for the build
+├── rename_files.py           # Main script
+├── requirements.txt          # Dependencies
+├── file_renamer_icon.ico     # App icon
+├── .gitignore                # Specifies intentionally untracked files to ignore
+├── LICENSE                   # License
+├── README.md                 # Documentation
+├── .github/                  # Outlines GitHub Actions workflow for the build
 │   └──
-├── dist/  # Contains built executable (after running PyInstaller)
+├── dist/                     # Contains built executable (after running PyInstaller)
 │   └── rename_files/
 │       ├── rename_files.exe  # Executable file to launch the file_renamer GUI
-│       └── _internal/  # Contains necessary dependencies for the executable
-│           ├── logs/  # Stores log files (created at runtime)
+│       └── _internal/        # Contains necessary dependencies for the executable
+│           ├── logs/         # Stores log files (created at runtime)
 │           │   └──
 │           └──
-└── build/  # Contains build artifacts (after running PyInstaller)
+└── build/                    # Contains build artifacts (after running PyInstaller)
     └── 
 ```
 
