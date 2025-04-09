@@ -1,6 +1,6 @@
 # [File Renamer](https://dcwelch.github.io/file_renamer)
 
-This File Renamer is a tool designed for Windows to rename a collection of vacation photos from various sources in a very simple, consistent, and specific way. The new naming format is primarily based on the date taken, when available, and can be represented as follows:
+This File Renamer is a Windows tool designed to rename a collection of vacation photos and videos from various sources in a very simple, consistent, and specific way. The new naming format is primarily based on the date taken, when available, and can be represented as follows:
    ```bash
    <year>_<month>_<day>_<hour>_<id>
    ```
@@ -13,7 +13,7 @@ Examples:
    0 Travel Day (4).mp4  -->  2024_06_20_17_005.mp4
    ```
 
-This tool was created for a very specific use case, so it is intentionally static and simple. Visit [dcwelch.github.io/file_renamer](https://dcwelch.github.io/file_renamer) for more high-level information.
+This tool was created for a very specific use case (to help organize photos from various common sources), so it is intentionally static and simple. For more powerful and complicated tool, see some of the alternatives listed below. Visit [dcwelch.github.io/file_renamer](https://dcwelch.github.io/file_renamer) for more high-level information on this tool.
 
 ![example_file_renamer_gui](https://github.com/user-attachments/assets/fcdd43af-fcf1-448f-b83b-66fc174a3122)
 
@@ -37,6 +37,7 @@ This tool was created for a very specific use case, so it is intentionally stati
 Many similar tasks may find themselves better solved with one of these tools:
 - [Bulk Rename Utility](https://www.bulkrenameutility.co.uk/)
 - [Microsoft PowerRename](https://learn.microsoft.com/en-us/windows/powertoys/powerrename)
+- [Szyszka](https://github.com/qarmin/szyszka)
 
 ## Download the latest version of the tool
 Visit [dcwelch.github.io/file_renamer](https://dcwelch.github.io/file_renamer) or the repo's [Releases](https://github.com/DCWelch/file_renamer/releases) tab to download the executable and necessary supporting files, which are packaged together in a zip file called `rename_files_executable.zip`.
