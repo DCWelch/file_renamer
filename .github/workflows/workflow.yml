@@ -85,7 +85,7 @@ jobs:
               font-size: 2rem;
               margin: 1rem 0;
             }
-            p, ul {
+            p {
               font-size: 1rem;
               line-height: 1.6;
             }
@@ -101,13 +101,6 @@ jobs:
             a.download-btn:hover {
               background-color: #0056b3;
             }
-            ul {
-              list-style-position: inside;
-              padding-left: 0;
-              text-align: left;
-              margin: 1rem auto;
-              display: inline-block;
-            }
           </style>
         </head>
         <body>
@@ -118,14 +111,8 @@ jobs:
             <h2>Download</h2>
             <p>Click the button below to download the latest version:</p>
             <a class="download-btn" href="'$LATEST_RELEASE_URL'">Download File Renamer</a>
-            <h2>Features</h2>
-            <ul>
-              <li>Renames files based on metadata like date taken.</li>
-              <li>Supports multiple file formats, including images and videos.</li>
-              <li>Provides fallback options for missing metadata.</li>
-            </ul>
             <h2>Need Help?</h2>
-            <p>For more information or to report bugs, visit the <a href="https://github.com/dcwelch/file_renamer/issues">GitHub Issues page</a>.</p>
+            <p>For more information or to report bugs, visit the <a href="https://github.com/dcwelch/file_renamer/issues">GitHub Issues page</a> or email <a href="mailto:dcwelch545@gmail.com">dcwelch545@gmail.com</a>.</p>
           </main>
         </body>
         </html>' > gh-pages/index.html
